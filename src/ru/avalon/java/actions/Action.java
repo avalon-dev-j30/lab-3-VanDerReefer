@@ -16,12 +16,15 @@ public interface Action extends Runnable, AutoCloseable {
      * Запускает потоковый объект на исполнение в отдельном
      * потоке исполнения.
      */
-    ExecutorService service = Executors.newWorkStealingPool();
+
+
+    ExecutorService executor = Executors.newCachedThreadPool();
+
     default void start() {
         /*
          * TODO №1 Реализуйте метод start интерфейса Action.
          */
-        service.execute(this);
+        executor.execute(this);
     }
     
 }

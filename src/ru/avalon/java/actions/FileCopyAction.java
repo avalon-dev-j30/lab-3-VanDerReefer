@@ -1,40 +1,51 @@
 package ru.avalon.java.actions;
 
-import java.nio.file.Path;
+import java.io.*;
+import java.nio.file.Files;
 
 /**
  * Действие, которое копирует файлы в пределах дискового
  * пространства.
  */
-
 public class FileCopyAction implements Action {
-    
-    private Path sourcePath;
-    private Path destinationPath;
+    /**
+     * {@inheritDoc}
+     */
+   private File source;
+   private File destination;
 
-    public FileCopyAction(Path sourcePath, Path destinationPath) {
-        this.sourcePath = sourcePath;
-        this.destinationPath = destinationPath;
+
+
+    public FileCopyAction(File source, File destination){
+        this.source = source;
+        this.destination = destination;
+
     }
-    
-   @Override
+
+    private synchronized void copyFile() throws IOException {
+
+
+        try(InputStream is = new FileInputStream(source);
+            OutputStream os = new FileOutputStream(destination)) {
+
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = is.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
+        }
+    }
+
+    @Override
     public void run() {
         /*
          * TODO №2 Реализуйте метод run класса FileCopyAction
          */
-        
-        
-        throw new UnsupportedOperationException("Not implemented yet!");
-
-    @Override
-    public void start() {
-        Action.super.start(); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void close() throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+        try {
+            copyFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -45,6 +56,6 @@ public class FileCopyAction implements Action {
         /*
          * TODO №3 Реализуйте метод close класса FileCopyAction
          */
-        throw new UnsupportedOperationException("Not implemented yet!");
+
     }
 }
